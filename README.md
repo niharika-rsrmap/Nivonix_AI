@@ -207,4 +207,4 @@ npm install
 npm start
 ```
 
-Author : Niharika 
+Devloper : Niharika Ramishetty
