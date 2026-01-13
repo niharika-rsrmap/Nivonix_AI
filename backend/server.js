@@ -43,12 +43,23 @@ console.log("📁 Uploads directory:", uploadsDir);
 // =====================
 // MIDDLEWARE
 // =====================
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://localhost:8080"
+];
+
+// Add frontend URL from environment if available
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000", "http://localhost:8080"],
+  origin: allowedOrigins,
   credentials: true
 }));
 
-console.log("✅ CORS enabled for localhost:5173, 3000, 8080");
+console.log("✅ CORS enabled for:", allowedOrigins.join(", "));
 
 app.use(express.json());
 console.log("✅ JSON parser enabled");

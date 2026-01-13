@@ -207,8 +207,4 @@ npm install
 npm start
 ```
 
-Visit `http://localhost:5173` for the frontend and backend runs on `http://localhost:8080`
-
----
-
-**Project Status**: ✅ Fully Functional and Ready for Deployment
+Devloper : Niharika Ramishetty
