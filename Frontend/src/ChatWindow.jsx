@@ -41,8 +41,16 @@ function ChatWindow() {
             return;
         }
 
+        if (!currThreadId) {
+            console.error("No thread ID available");
+            setReply("Error: No thread ID. Please refresh the page.");
+            setLoading(false);
+            setIsTyping(false);
+            return;
+        }
+
         try {
-            console.log("Sending chat request with token:", authToken.substring(0, 20) + "...");
+            console.log("Sending chat request:", { threadId: currThreadId, message: prompt, token: authToken.substring(0, 20) });
             const res = await chatAPI.sendMessage(currThreadId, prompt, authToken);
             setReply(res.reply);
         } catch (err) {
