@@ -7,6 +7,7 @@ import { ToastProvider, ToastContext } from "./ToastContext.jsx";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useState, useEffect, useContext } from 'react';
 import { v1 as uuidv1 } from "uuid";
+import { authAPI } from "./api.js";
 
 function App() {
   const [showSignUpPopup, setShowSignUpPopup] = useState(false);
@@ -33,23 +34,14 @@ function App() {
     const checkExistingUser = async () => {
       const storedUser = localStorage.getItem('user');
       const authToken = localStorage.getItem('authToken');
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
       if (storedUser && authToken) {
         try {
           // Verify token is still valid
-          const response = await fetch(`${apiUrl}/api/auth/verify`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ token: authToken })
-          });
-
-          const data = await response.json();
+          const data = await authAPI.verify(authToken);
           if (data.valid) {
             setUser(JSON.parse(storedUser));
-            setShowSignUpPopup(false); // Don't show signup for existing users
+            setShowSignUpPopup(false);
             showToast(`Welcome back ${JSON.parse(storedUser).name}!`, 'success', 2000);
             return;
           }
@@ -63,7 +55,7 @@ function App() {
       // Show signup only for new users
       const timer = setTimeout(() => {
         setShowSignUpPopup(true);
-      }, 5000); // 5 seconds
+      }, 5000);
 
       return () => clearTimeout(timer);
     };
@@ -74,27 +66,7 @@ function App() {
   const handleGoogleSignUp = async (googleToken) => {
     try {
       console.log('Sending Google token to backend...');
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-      const response = await fetch(`${apiUrl}/api/auth/google`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token: googleToken })
-      });
-
-      console.log('Response status:', response.status);
-      const text = await response.text();
-      console.log('Response text:', text);
-
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        console.error('Failed to parse response as JSON:', e);
-        alert('Server error: Invalid response from backend');
-        return;
-      }
+      const data = await authAPI.google(googleToken);
 
       if (data.success) {
         const userData = {

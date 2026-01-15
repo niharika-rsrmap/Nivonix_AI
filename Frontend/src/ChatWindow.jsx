@@ -3,6 +3,7 @@ import Chat from "./Chat.jsx";
 import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useEffect, useRef } from "react";
 import { ScaleLoader } from "react-spinners";
+import { chatAPI } from "./api.js";
 
 function ChatWindow() {
     const {
@@ -40,32 +41,9 @@ function ChatWindow() {
             return;
         }
 
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${authToken}`
-            },
-            body: JSON.stringify({
-                message: prompt,
-                threadId: currThreadId,
-                settings: settings
-            })
-        };
-
         try {
             console.log("Sending chat request with token:", authToken.substring(0, 20) + "...");
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-            const response = await fetch(`${apiUrl}/api/chat`, options);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Response status:", response.status);
-                console.error("Response text:", errorText);
-                throw new Error(`HTTP ${response.status}: ${errorText}`);
-            }
-            
-            const res = await response.json();
+            const res = await chatAPI.sendMessage(currThreadId, prompt, authToken);
             setReply(res.reply);
         } catch (err) {
             console.error("Error getting reply:", err);

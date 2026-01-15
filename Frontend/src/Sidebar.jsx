@@ -2,6 +2,7 @@ import "./Sidebar.css";
 import { useContext, useEffect, useState } from "react";
 import { MyContext } from "./MyContext.jsx";
 import { v1 as uuidv1 } from "uuid";
+import { chatAPI } from "./api.js";
 
 function Sidebar() {
     const {
@@ -18,16 +19,7 @@ function Sidebar() {
     const getAllThreads = async () => {
         try {
             const authToken = localStorage.getItem('authToken');
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-            const response = await fetch(`${apiUrl}/api/chat/thread`, {
-                headers: {
-                    "Authorization": `Bearer ${authToken}`
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-            const threads = await response.json();
+            const threads = await chatAPI.getThreads(authToken);
             const filteredData = threads.map(thread => ({
                 threadId: thread.threadId,
                 title: thread.title,
@@ -55,13 +47,7 @@ function Sidebar() {
         setCurrThreadId(newThreadId);
         try {
             const authToken = localStorage.getItem('authToken');
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-            const response = await fetch(`${apiUrl}/api/chat/thread/${newThreadId}`, {
-                headers: {
-                    "Authorization": `Bearer ${authToken}`
-                }
-            });
-            const messages = await response.json();
+            const messages = await chatAPI.getThread(newThreadId, authToken);
             setPrevChats(messages);
             setNewChat(false);
             setReply(null);
@@ -73,14 +59,7 @@ function Sidebar() {
     const deleteThread = async (threadId) => {
         try {
             const authToken = localStorage.getItem('authToken');
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-            const response = await fetch(`${apiUrl}/api/chat/thread/${threadId}`, {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${authToken}`
-                }
-            });
-            await response.json();
+            await chatAPI.deleteThread(threadId, authToken);
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
             if (threadId === currThreadId) {
                 createNewChat();
