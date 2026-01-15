@@ -54,12 +54,14 @@ if (process.env.FRONTEND_URL) {
   allowedOrigins.push(process.env.FRONTEND_URL);
 }
 
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+// For production, allow all origins (Render deployment)
+const corsOptions = process.env.NODE_ENV === "production" 
+  ? { origin: "*", credentials: false }
+  : { origin: allowedOrigins, credentials: true };
 
-console.log("✅ CORS enabled for:", allowedOrigins.join(", "));
+app.use(cors(corsOptions));
+
+console.log("✅ CORS enabled for:", process.env.NODE_ENV === "production" ? "all origins" : allowedOrigins.join(", "));
 
 app.use(express.json());
 console.log("✅ JSON parser enabled");
@@ -94,9 +96,9 @@ app.listen(PORT, () => {
   console.log("╔════════════════════════════════════════╗");
   console.log("║   🎉 NIVONIX BACKEND READY 🎉         ║");
   console.log("╚════════════════════════════════════════╝");
-  console.log(`\n📍 Server: http://localhost:${PORT}`);
-  console.log(`🔐 Auth: http://localhost:${PORT}/api/auth/google`);
-  console.log(`💬 Chat: http://localhost:${PORT}/api/chat`);
-  console.log(`📤 Upload: http://localhost:${PORT}/api/upload`);
-  console.log(`\n🌐 CORS Enabled: localhost:5173, 3000, 8080\n`);
+  console.log(`\n📍 Server running on port: ${PORT}`);
+  console.log(`🔐 Auth: /api/auth/google`);
+  console.log(`💬 Chat: /api/chat`);
+  console.log(`📤 Upload: /api/upload`);
+  console.log(`\n🌐 Environment: ${process.env.NODE_ENV || "development"}\n`);
 });
