@@ -1,5 +1,5 @@
 // API utility for making requests to backend
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://nivonix-ai.onrender.com/api';
 
 export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_BASE}${endpoint}`;
