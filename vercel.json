@@ -5,6 +5,6 @@
       "maxDuration": 60
     }
   },
-  "buildCommand": "npm install",
+  "buildCommand": "cd Frontend && npm install && npm run build",
   "outputDirectory": "Frontend/dist"
 }
