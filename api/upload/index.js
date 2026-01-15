@@ -10,13 +10,8 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Note: File uploads on Vercel serverless functions are limited
-  // For production, consider using a service like Cloudinary or AWS S3
-  
   if (req.method === 'POST') {
     try {
-      // Vercel serverless functions have limitations with file uploads
-      // This is a placeholder that returns an error
       return res.status(400).json({
         success: false,
         error: 'File uploads are not supported on serverless functions. Use Cloudinary or AWS S3 instead.'

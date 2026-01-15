@@ -1,4 +1,4 @@
-import User from '../backend/models/User.js';
+import User from '../../backend/models/User.js';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 
@@ -18,20 +18,22 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { action } = req.query;
-
   try {
-    if (action === 'register' && req.method === 'POST') {
-      return handleRegister(req, res);
-    } else if (action === 'login' && req.method === 'POST') {
-      return handleLogin(req, res);
-    } else if (action === 'verify' && req.method === 'POST') {
-      return handleVerify(req, res);
-    } else if (action === 'google' && req.method === 'POST') {
-      return handleGoogleAuth(req, res);
-    } else {
-      return res.status(404).json({ error: 'Endpoint not found' });
+    if (req.method === 'POST') {
+      const { action } = req.query;
+      
+      if (action === 'register') {
+        return handleRegister(req, res);
+      } else if (action === 'login') {
+        return handleLogin(req, res);
+      } else if (action === 'verify') {
+        return handleVerify(req, res);
+      } else if (action === 'google') {
+        return handleGoogleAuth(req, res);
+      }
     }
+    
+    return res.status(404).json({ error: 'Endpoint not found' });
   } catch (err) {
     console.error('Auth error:', err);
     return res.status(500).json({ error: 'Internal server error' });

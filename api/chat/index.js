@@ -1,5 +1,5 @@
-import Thread from '../backend/models/Thread.js';
-import getOpenAIResponse from '../backend/utils/openai.js';
+import Thread from '../../backend/models/Thread.js';
+import getOpenAIResponse from '../../backend/utils/openai.js';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
