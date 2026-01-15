@@ -24,16 +24,20 @@ const verifyToken = (req, res, next) => {
 
 router.post("/", verifyToken, async(req, res) => {
    console.log("🔵 POST /chat - processing request");
-   console.log("Body received:", req.body);
+   console.log("Raw body:", req.body);
+   console.log("Body type:", typeof req.body);
+   console.log("Body keys:", Object.keys(req.body || {}));
    
    const threadId = req.body?.threadId;
    const message = req.body?.message;
    const userId = req.userId;
    
+   console.log("Extracted values:", { threadId, message, userId });
+   
    if (!threadId || !message) {
     return res.status(400).json({ 
       error: "missing required fields", 
-      received: { threadId, message }
+      received: { threadId, message, userId }
     });
    }
    try {

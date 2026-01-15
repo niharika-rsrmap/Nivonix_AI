@@ -63,7 +63,7 @@ app.use(cors(corsOptions));
 
 console.log("✅ CORS enabled for:", process.env.NODE_ENV === "production" ? "all origins" : allowedOrigins.join(", "));
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 console.log("✅ JSON parser enabled");
 
 app.use(express.static("uploads"));
