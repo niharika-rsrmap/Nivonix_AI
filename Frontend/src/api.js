@@ -1,17 +1,24 @@
 // API utility for making requests to backend
-const API_BASE = 'https://nivonix-ai.onrender.com/api';
+const API_BASE = 'http://localhost:5000/api';
 
 export const apiCall = async (endpoint, options = {}) => {
   const url = `${API_BASE}${endpoint}`;
   
   try {
-    const response = await fetch(url, {
+    const fetchOptions = {
+      method: options.method || 'GET',
       headers: {
         'Content-Type': 'application/json',
         ...options.headers,
       },
-      ...options,
-    });
+    };
+
+    // Only add body if it exists
+    if (options.body) {
+      fetchOptions.body = options.body;
+    }
+
+    const response = await fetch(url, fetchOptions);
 
     const data = await response.json();
 

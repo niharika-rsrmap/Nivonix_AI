@@ -66,6 +66,16 @@ console.log("✅ CORS enabled for:", process.env.NODE_ENV === "production" ? "al
 app.use(express.json());
 console.log("✅ JSON parser enabled");
 
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  if (req.path.includes('/chat')) {
+    console.log(`📨 ${req.method} ${req.path}`);
+    console.log(`📨 Body:`, req.body);
+    console.log(`📨 Headers:`, req.headers);
+  }
+  next();
+});
+
 app.use(express.static("uploads"));
 console.log("✅ Static file serving enabled");
 
