@@ -16,6 +16,7 @@ export const apiCall = async (endpoint, options = {}) => {
     // Only add body if it exists
     if (options.body) {
       fetchOptions.body = options.body;
+      console.log(`📤 Sending to ${endpoint}:`, fetchOptions.body);
     }
 
     const response = await fetch(url, fetchOptions);
