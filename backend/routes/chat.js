@@ -26,8 +26,10 @@ router.post("/", verifyToken, async(req, res) => {
    const { threadId, message } = req.body;
    const userId = req.userId;
    
+   console.log("📨 Chat request received:", { threadId, message, userId, body: req.body });
+   
    if (!threadId || !message) {
-    return res.status(400).json({ error: "missing required fields" });
+    return res.status(400).json({ error: "missing required fields", received: { threadId, message } });
    }
    try {
     let thread = await Thread.findOne({ userId, threadId });
